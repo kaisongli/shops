@@ -8,5 +8,7 @@
         <setting name="logImpl" value="STDOUT_LOGGING"/>
         <setting name="useGeneratedKeys" value="true"/>
         <setting name="mapUnderscoreToCamelCase" value="true"/>
+        <!--列标签替换列别名-->
+        <setting name="useColumnLabel" value="true"/>
     </settings>
 </configuration>
