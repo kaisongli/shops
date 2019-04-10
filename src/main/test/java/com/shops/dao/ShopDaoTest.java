@@ -20,6 +20,7 @@ public class ShopDaoTest extends BaseTest{
     @Autowired
     private ShopDao shopDao;
 
+
     @Test
     public void testInsertShop(){
         Shop shop = new Shop();
@@ -44,6 +45,19 @@ public class ShopDaoTest extends BaseTest{
         shop.setShopImg("test img");
 
         int result = shopDao.insertShop(shop);
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void testUpdateShop(){
+        Shop shop = new Shop();
+        shop.setShopId(1);
+        shop.setShopDesc("测试修改描述");
+        shop.setModifyTime(new Date());
+        shop.setShopAdress("测试修改地址");
+        shop.setPriority(2);
+
+        int result = shopDao.updateShop(shop);
         assertEquals(1, result);
     }
 }

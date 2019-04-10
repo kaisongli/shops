@@ -13,4 +13,44 @@
         ,#{advice}, #{enableStatus}, #{createTime},#{area.areaId},#{shopCategory.shopCategoryId}
         )
     </insert>
+    
+    <update id="updateShop" parameterType="com.shpos.entity.Shop">
+        update tb_shop
+        <set>
+            <if test="shopName != null and shopName != ''">
+                shop_name = #{shopName},
+            </if>
+            <if test="shopImg != null and shopImg != ''">
+                shop_img = #{shopImg},
+            </if>
+            <if test="shopDesc != null and shopDesc != ''">
+                shop_desc = #{shopDesc},
+            </if>
+            <if test="priority != null">
+                priority = #{priority},
+            </if>
+            <if test="shopAdress != null and shopAdress != ''">
+                shop_adress = #{shopAdress},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="advice != null and advice != ''">
+                advice = #{advice},
+            </if>
+            <if test="enableStatus != null">
+                enable_status = #{enableStatus},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="area != null">
+                area_id = #{area.areaId},
+            </if>
+            <if test="shopCategory != null">
+                shop_category_id = #{shopCategory.shopCategoryId}
+            </if>
+        </set>
+        where shop_id = #{shopId}
+    </update>
 </mapper>
