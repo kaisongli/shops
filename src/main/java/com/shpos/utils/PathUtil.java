@@ -12,7 +12,7 @@ public class PathUtil {
         if (os.toLowerCase().startsWith("win")){
             basePath = "D:/projectdev/image/";
         }else {
-            basePath = "/home/likaisong/spring/image/";
+            basePath = "/Users/likaisong/spring/image/";
         }
         //替换分隔符
         basePath.replace("/", separator);

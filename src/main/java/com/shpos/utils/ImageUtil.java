@@ -2,7 +2,8 @@ package com.shpos.utils;
 
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.io.File;
@@ -16,23 +17,34 @@ import java.util.Random;
  */
 public class ImageUtil {
 
-    private static String basePath = ClassLoader.getSystemResource("").getPath();
+    private static Logger logger = LoggerFactory.getLogger(ImageUtil.class.getName());
+    //resource路径
+    private static String resourcePath = ClassLoader.getSystemResource("").getPath();
 
-    public static void generatorThumbnaila(CommonsMultipartFile thumbnaila, String fileDir) {
-        String fileRealName = getRandomFileName();
-        String extension = getFileExtension(thumbnaila);
+    public static String generatorThumbnaila(File thumbnaila, String fileDir) {
+        //创建上传文件目录
         makeDirPath(fileDir);
-        String relativeAddr = fileDir + fileRealName + extension;
+        //随机文件名
+        String fileName = getRandomFileName();
+        //文件后缀格式
+        String extension = getFileExtension(thumbnaila);
+        //图片相对路径
+        String relativeAddr = fileDir + fileName + extension;
+        logger.debug("图片相对路径：" + relativeAddr);
+        //图片绝对路径（存储路径）
         File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
+        logger.debug("图片绝对路径：" + dest.getPath());
         try {
-            Thumbnails.of(thumbnaila.getInputStream())
+            Thumbnails.of(thumbnaila)
                     .size(200, 200)
-                    .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(basePath + "/watermark.png")), 0.5f)
+                    .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(resourcePath + "/watermark.png")), 0.5f)
                     .outputQuality(0.8f)
                     .toFile(dest);
         } catch (IOException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
+        return relativeAddr;
     }
 
     /**
@@ -42,8 +54,10 @@ public class ImageUtil {
     private static void makeDirPath(String fileDir) {
         String realPath = PathUtil.getImgBasePath() + fileDir;
         File dirPath = new File(realPath);
+        logger.debug("文件目录：" + dirPath.getPath());
         if (! dirPath.exists()){
-            dirPath.mkdir();
+            //逐级创建
+            dirPath.mkdirs();
         }
     }
 
@@ -52,8 +66,8 @@ public class ImageUtil {
      * @param thumbnaila
      * @return
      */
-    private static String getFileExtension(CommonsMultipartFile thumbnaila) {
-        String fileName = thumbnaila.getOriginalFilename();
+    private static String getFileExtension(File thumbnaila) {
+        String fileName = thumbnaila.getName();
         return fileName.substring(fileName.lastIndexOf("."));
     }
 
