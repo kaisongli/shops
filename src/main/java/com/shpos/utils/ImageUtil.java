@@ -76,7 +76,7 @@ public class ImageUtil {
      *
      * @return
      */
-    private static String getRandomFileName() {
+    public static String getRandomFileName() {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
         String str = simpleDateFormat.format(date);
