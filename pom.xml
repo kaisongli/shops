@@ -189,7 +189,7 @@
                         </httpConnector>
                         <scanIntervalSeconds>1</scanIntervalSeconds>
                         <webApp>
-                            <contextPath>/</contextPath>
+                            <contextPath>/shops</contextPath>
                         </webApp>
                     </configuration>
                 </plugin>
