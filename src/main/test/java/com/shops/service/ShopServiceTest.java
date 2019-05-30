@@ -12,6 +12,9 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
@@ -24,7 +27,7 @@ public class ShopServiceTest extends BaseTest {
     private ShopService shopService;
 
     @Test
-    public void testAddShop() {
+    public void testAddShop() throws FileNotFoundException {
         Shop shop = new Shop();
         Area area = new Area();
         area.setAreaId(1);
@@ -43,9 +46,10 @@ public class ShopServiceTest extends BaseTest {
         shop.setPriority(1);
         shop.setShopAdress("addShop测试地址");
         shop.setShopDesc("addShop测试描述");
-        shop.setShopName("addShop测试店名5");
+        shop.setShopName("addShop测试店名6");
         File shopImg = new File("/Users/likaisong/Downloads/好鸭.gif");
-        ShopExecution execution = shopService.addShop(shop, shopImg);
+        InputStream shopImgInputStream = new FileInputStream(shopImg);
+        ShopExecution execution = shopService.addShop(shop, shopImgInputStream, shopImg.getName());
         assertEquals(ShopStateEnum.CHECK.getState(), execution.getState());
     }
 }

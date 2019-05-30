@@ -34,7 +34,7 @@ public class ShopManagementController {
 
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> registerShop(HttpServletRequest request){
+    public Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
         //接收并转化参数
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");
@@ -50,72 +50,38 @@ public class ShopManagementController {
         //处理图片文件信息
         CommonsMultipartFile shopImg = null;
         CommonsMultipartResolver resolver = new CommonsMultipartResolver(request.getSession().getServletContext());
-        if (resolver.isMultipart(request)){
+        if (resolver.isMultipart(request)) {
             MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
             shopImg = (CommonsMultipartFile) multipartHttpServletRequest.getFile("shopImg");
-        } else{
+        } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "上传图片不能为空");
             return modelMap;
         }
         //注册店铺
-        if (shop != null && shopImg != null){
+        if (shop != null && shopImg != null) {
             UserInfo owner = new UserInfo();
             owner.setUserId(1);
             shop.setOwner(owner);
-            File shopImgFile = new File(PathUtil.getImgBasePath() + ImageUtil.getRandomFileName());
+            ShopExecution execution = null;
             try {
-                shopImgFile.createNewFile();
+                execution = shopService.addShop(shop, shopImg.getInputStream(), shopImg.getOriginalFilename());
+                if (execution.getState() == ShopStateEnum.CHECK.getState()) {
+                    modelMap.put("success", true);
+                } else {
+                    modelMap.put("success", false);
+                    modelMap.put("errMsg", execution.getStateInfo());
+                }
             } catch (IOException e) {
                 modelMap.put("success", false);
                 modelMap.put("errMsg", e.getMessage());
-                return modelMap;
             }
-            try {
-                inputStreamToFile(shopImg.getInputStream(), shopImgFile);
-            } catch (IOException e) {
-                modelMap.put("success", false);
-                modelMap.put("errMsg", e.getMessage());
-                return modelMap;
-            }
-            ShopExecution execution = shopService.addShop(shop, shopImgFile);
-            if (execution.getState() == ShopStateEnum.CHECK.getState()){
-                modelMap.put("success", true);
-            }else {
-                modelMap.put("success", false);
-                modelMap.put("errMsg", execution.getStateInfo());
-            }
-        }else {
+        } else {
             modelMap.put("success", false);
             modelMap.put("errMsg", "店铺信息不能为空");
             return modelMap;
         }
         //返回结果
         return modelMap;
-    }
-
-    private static void inputStreamToFile(InputStream inputStream, File file){
-        OutputStream outputStream = null;
-        try {
-            outputStream = new FileOutputStream(file);
-            int bytesRead = 0;
-            byte[] buffer = new byte[1024];
-            while ((bytesRead = inputStream.read(buffer)) != -1){
-                outputStream.write(buffer, 0, bytesRead);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("输入流转文件失败：" + e.getMessage());
-        } finally {
-            try{
-                if (inputStream != null){
-                    inputStream.close();
-                }
-                if (outputStream != null){
-                    outputStream.close();
-                }
-            } catch (IOException e) {
-                throw new RuntimeException("输入流转文件失败IO关闭：" + e.getMessage());
-            }
-        }
     }
 }

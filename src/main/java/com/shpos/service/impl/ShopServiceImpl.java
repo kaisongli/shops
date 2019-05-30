@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Date;
 
 /**
@@ -25,7 +26,7 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     @Transactional
-    public ShopExecution addShop(Shop shop, File shopImg) {
+    public ShopExecution addShop(Shop shop, InputStream shopImgInputStream, String fileName) {
         //空值判断
         if (shop == null) {
             return new ShopExecution(ShopStateEnum.NULL_SHOP);
@@ -40,12 +41,12 @@ public class ShopServiceImpl implements ShopService {
             if (efectNum <= 0) {
                 throw new ShopRuntimeException("店铺创建失败");
             } else {
-                if (shopImg != null) {
+                if (shopImgInputStream != null) {
                     //存储图片
                     try {
-                        addShopImg(shop, shopImg);
+                        addShopImg(shop, shopImgInputStream, fileName);
                     } catch (Exception e) {
-                        throw new ShopRuntimeException("shopImg error" + e.getMessage());
+                        throw new ShopRuntimeException("shopImgInputStream error" + e.getMessage());
                     }
                     //更新图片地址
                     efectNum = shopDao.updateShop(shop);
@@ -55,16 +56,16 @@ public class ShopServiceImpl implements ShopService {
                 }
             }
         } catch (Exception e) {
-            throw new ShopRuntimeException("addShop error" + e.getMessage());
+            throw new ShopRuntimeException("addShop error " + e.getMessage());
         }
 
         return new ShopExecution(ShopStateEnum.CHECK, shop);
     }
 
-    private void addShopImg(Shop shop, File shopImg) {
+    private void addShopImg(Shop shop, InputStream inputStream, String fileName) {
         //获取shop图片目录
         String imageDir = PathUtil.getShopImagePath(shop.getShopId());
-        String shopImgAdrr = ImageUtil.generatorThumbnaila(shopImg, imageDir);
+        String shopImgAdrr = ImageUtil.generatorThumbnaila(inputStream, fileName, imageDir);
         shop.setShopImg(shopImgAdrr);
     }
 }

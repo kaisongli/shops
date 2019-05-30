@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -21,21 +22,21 @@ public class ImageUtil {
     //resource路径
     private static String resourcePath = ClassLoader.getSystemResource("").getPath();
 
-    public static String generatorThumbnaila(File thumbnaila, String fileDir) {
+    public static String generatorThumbnaila(InputStream thumbnailaInputStream, String fileName, String fileDir) {
         //创建上传文件目录
         makeDirPath(fileDir);
         //随机文件名
-        String fileName = getRandomFileName();
+        String realFileName = getRandomFileName();
         //文件后缀格式
-        String extension = getFileExtension(thumbnaila);
+        String extension = getFileExtension(fileName);
         //图片相对路径
-        String relativeAddr = fileDir + fileName + extension;
+        String relativeAddr = fileDir + realFileName + extension;
         logger.debug("图片相对路径：" + relativeAddr);
         //图片绝对路径（存储路径）
         File dest = new File(PathUtil.getImgBasePath() + relativeAddr);
         logger.debug("图片绝对路径：" + dest.getPath());
         try {
-            Thumbnails.of(thumbnaila)
+            Thumbnails.of(thumbnailaInputStream)
                     .size(200, 200)
                     .watermark(Positions.BOTTOM_RIGHT, ImageIO.read(new File(resourcePath + "/watermark.png")), 0.5f)
                     .outputQuality(0.8f)
@@ -63,11 +64,10 @@ public class ImageUtil {
 
     /**
      * 获取文件扩展名
-     * @param thumbnaila
+     * @param fileName
      * @return
      */
-    private static String getFileExtension(File thumbnaila) {
-        String fileName = thumbnaila.getName();
+    private static String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf("."));
     }
 

@@ -1,13 +1,8 @@
-/**
- *
- *
- */
 $(function () {
-    var initUrl = '/shop/shopadmin/getshopinitinfo';
-    var registerShopUrl = 'shop/shopadmin/registershop';
+    var initUrl = '/shops/shopadmin/getshopinitinfo';
+    var registerShopUrl = 'shops/shopadmin/registershop';
     alert(initUrl);
     getShopInitInfo();
-
 
     function getShopInitInfo() {
         $.getJSON(initUrl, function (data) {
@@ -33,12 +28,12 @@ $(function () {
             shop.shopPhone = $('#shop-phone').val();
             shop.shopDesc = $('#shop-desc').val();
             shop.shopCategory = {
-                shopCategoryId : $('#shop-category').find('option').not(function () {
+                shopCategoryId: $('#shop-category').find('option').not(function () {
                     return !this.selected;
                 }).data('id')
             };
             shop.area = {
-                areaId : $('#area-category').find('option').not(function () {
+                areaId: $('#area-category').find('option').not(function () {
                     return !this.selected;
                 }).data('id')
             };
@@ -52,8 +47,8 @@ $(function () {
                 data: formData,
                 contentType: false,
                 cache: false,
-                success: function (data){
-                    if (data.success){
+                success: function (data) {
+                    if (data.success) {
                         $.toast('提交成功');
                     } else {
                         $.toast('提交失败' + data.errMsg);
@@ -62,5 +57,4 @@ $(function () {
             })
         })
     }
-
-})
+});
