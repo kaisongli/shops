@@ -2,15 +2,20 @@ package com.shpos.controller.shopAdmin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shpos.dao.dto.ShopExecution;
+import com.shpos.entity.Area;
 import com.shpos.entity.Shop;
+import com.shpos.entity.ShopCategory;
 import com.shpos.entity.UserInfo;
 import com.shpos.enume.ShopStateEnum;
+import com.shpos.service.AreaService;
+import com.shpos.service.ShopSeCategoryService;
 import com.shpos.service.ShopService;
 import com.shpos.utils.HttpServletRequestUtil;
 import com.shpos.utils.ImageUtil;
 import com.shpos.utils.PathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -20,7 +25,9 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,6 +38,30 @@ import java.util.Map;
 public class ShopManagementController {
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private ShopSeCategoryService shopSeCategoryService;
+
+    @Autowired
+    private AreaService areaService;
+
+    @GetMapping(value = "/getshopinitinfo")
+    @ResponseBody
+    public Map<String, Object> getShopinitinfo() {
+        Map<String, Object> modelMap = new HashMap<>();
+        try {
+            List<ShopCategory> shopCategoryList = shopSeCategoryService.getShopCategoryList(new ShopCategory());
+            List<Area> areaList = areaService.getAreaList();
+            modelMap.put("shopCategoryList", shopCategoryList);
+            modelMap.put("areaList", areaList);
+            modelMap.put("success", true);
+        } catch (Exception e) {
+            modelMap.put("success", false);
+            modelMap.put("errMsg", e.getMessage());
+
+        }
+        return modelMap;
+    }
 
     @RequestMapping(value = "/registershop", method = RequestMethod.POST)
     @ResponseBody
@@ -61,6 +92,7 @@ public class ShopManagementController {
         //注册店铺
         if (shop != null && shopImg != null) {
             UserInfo owner = new UserInfo();
+            //Session TODO
             owner.setUserId(1);
             shop.setOwner(owner);
             ShopExecution execution = null;

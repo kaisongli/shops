@@ -1,10 +1,12 @@
 package com.shpos.dao;
 
 import com.shpos.entity.Shop;
+import org.springframework.stereotype.Repository;
 
 /**
  * Created by likaisong on 2019/4/9.
  */
+@Repository
 public interface ShopDao {
     /**
      * 新增店铺
