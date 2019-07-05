@@ -10,6 +10,7 @@ import com.shpos.enume.ShopStateEnum;
 import com.shpos.service.AreaService;
 import com.shpos.service.ShopSeCategoryService;
 import com.shpos.service.ShopService;
+import com.shpos.utils.CodeUtil;
 import com.shpos.utils.HttpServletRequestUtil;
 import com.shpos.utils.ImageUtil;
 import com.shpos.utils.PathUtil;
@@ -67,6 +68,11 @@ public class ShopManagementController {
     @ResponseBody
     public Map<String, Object> registerShop(HttpServletRequest request) {
         Map<String, Object> modelMap = new HashMap<>();
+        if (!CodeUtil.checkVerifyCode(request)){
+            modelMap.put("success", false);
+            modelMap.put("errMsg", "验证码错误");
+            return modelMap;
+        }
         //接收并转化参数
         String shopStr = HttpServletRequestUtil.getString(request, "shopStr");
         ObjectMapper objectMapper = new ObjectMapper();
