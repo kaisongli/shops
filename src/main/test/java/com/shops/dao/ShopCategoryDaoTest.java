@@ -21,6 +21,6 @@ public class ShopCategoryDaoTest extends BaseTest {
     @Test
     public void testQueryShopCategory() {
         List<ShopCategory> shopCategories = shopCategoryDao.queryShopCategory(new ShopCategory());
-        assertEquals(1, shopCategories.size());
+        assertEquals(4, shopCategories.size());
     }
 }

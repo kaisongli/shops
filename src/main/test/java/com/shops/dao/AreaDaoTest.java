@@ -20,7 +20,7 @@ public class AreaDaoTest extends BaseTest {
     @Test
     public void testAreaQuery() {
         List<Area> areas = areaDao.queryArea();
-        assertEquals("东区", areas.get(0).getAreaName());
-        assertEquals(2, areas.size());
+        assertEquals("地区4", areas.get(0).getAreaName());
+        assertEquals(4, areas.size());
     }
 }
