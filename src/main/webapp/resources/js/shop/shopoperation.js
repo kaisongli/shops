@@ -52,6 +52,7 @@ $(function () {
                 type: 'POST',
                 data: formData,
                 contentType: false,
+                processData: false,
                 cache: false,
                 success: function (data) {
                     if (data.success) {

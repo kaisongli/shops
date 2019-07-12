@@ -13,7 +13,7 @@
 
     <!-- 定义日志文件 输出位置 -->
     <property name="log.app_name" value="shops"/>
-    <property name="log.home_dir" value="../logs"/>
+    <property name="log.home_dir" value="./logs"/>
     <!-- 日志最大的历史 30天 -->
     <property name="log.maxHistory" value="30"/>
     <property name="log.level" value="debug"/>

@@ -22,6 +22,40 @@
         <property name="password" value="${jdbc.pwd}"/>
     </bean>
 
+    <!--
+    <bean id="abstractDataSource" abstract="true"
+    class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+
+    </bean>
+    主数据库配置
+    <bean id="master"  parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driver}"/>
+    <property name="url" value="${jdbc.master.url}"/>
+    <property name="username" value="${jdbc.uid}"/>
+    <property name="password" value="${jdbc.pwd}"/>
+
+    从数据库配置
+    <bean id="slave"  parent="abstractDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="${jdbc.driver}"/>
+    <property name="url" value="${jdbc.slave.url}"/>
+    <property name="username" value="${jdbc.uid}"/>
+    <property name="password" value="${jdbc.pwd}"/>
+    </bean>
+
+    配置动态数据源
+    <bean id="dynamicDataSource" class="com.shpos.dao.split.DynamicDataSource">
+        <property name="targetDataSources">
+            <map>
+                <entry value-ref="master" key="master"></entry>
+                <entry value-ref="slave" key="slave"></entry>
+            </map>
+        </property>
+    </bean>
+    懒加载
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.LazyConnectionDataSourceProxy">
+        <property name="targetDataSource" ref="dynamicDataSource"></property>
+    </bean>
+    -->
     <!--3 会话工厂bean sqlSessionFactoryBean -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <!-- 数据源 -->
